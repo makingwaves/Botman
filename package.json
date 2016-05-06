@@ -1,0 +1,24 @@
+{
+  "name": "botman",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "node-wit": "^3.2.2",
+    "yr.no-forecast": "0.0.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/makingwaves/Botman.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/makingwaves/Botman/issues"
+  },
+  "homepage": "https://github.com/makingwaves/Botman#readme"
+}
