@@ -6,7 +6,10 @@ const RTM_CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS.RTM;
 const log4js = require('log4js');
 const log = log4js.getLogger('botto');
 
-const token = process.env.SLACK_API_TOKEN || 'xoxb-41366375990-TLhI4NfEBwZhFfu6YgD1gQsy';
+const token = process.env.SLACK_API_TOKEN || '';
+const yrfore = require('./yr-forecast');
+var postDict =  {};
+yrfore.init();
 
 var rtm = new RtmClient(token, {logLevel: 'debug'});
 rtm.start();
@@ -17,10 +20,25 @@ rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function (rtmStartData) {
 
 rtm.on(RTM_EVENTS.MESSAGE, function (message) {
   // Listens to all `message` events from the team
+  if(message.text.toLowerCase().indexOf('været') > -1){
+  	var location = message.text.toLowerCase().replace('været', '').trim();
+  	 yrfore.forecast(location).then(
+            function(result) {
+                     log.debug('temp', result.temperature);
+			         rtm.sendMessage(`Jeg tror temperaturen i ${location} er ${result.temperature}` , message.channel, function messageSent() {
+		  	});
+		   
+            },
+            function(error){
+                log.error(error);
+			    rtm.sendMessage(`Jeg skjønte ikke helt - fant ikke noe sted som heter  '${location}'. Prøv med navnet på en norsk kommune :)  ` + message.text, message.channel, function messageSent() {
+			    // optionally, you can supply a callback to execute once the message has been sent
+			  	});
+           
+            });
+  	  
+  }
   
-  rtm.sendMessage('Hva mener du egentlig med ' + message.text, message.channel, function messageSent() {
-    // optionally, you can supply a callback to execute once the message has been sent
-  });
 });
 
 rtm.on(RTM_EVENTS.CHANNEL_CREATED, function (message) {
